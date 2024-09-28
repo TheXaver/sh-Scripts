@@ -31,8 +31,8 @@ EOF
     if [ "$SUCCESS" == "true" ]; then
         RULE_ID=$(echo "$RESPONSE" | jq -r '.result.id')
         sed -i "/^$IP:/d" "$FILE"
-        echo "$(date '+%Y-%m-%d %H:%M:%S') - $IP" >> "$LOG_FILE"
-        # Добавляем IP в лог-файл, если его там еще нет
+        echo "$IP:$RULE_ID" >> "$FILE"
+        # Добавляем IP и время в лог-файл, если его там еще нет
         if ! grep -q "^$IP$" "$LOG_FILE"; then
             echo "$(date '+%Y-%m-%d %H:%M:%S') - $IP" >> "$LOG_FILE"
         fi
@@ -68,9 +68,9 @@ EOF
                     if [ "$SUCCESS_UPDATE" == "true" ]; then
                         sed -i "/^$IP:/d" "$FILE"
                         echo "$IP:$RULE_ID" >> "$FILE"
-                        # Добавляем IP в лог-файл, если его там еще нет
+                        # Добавляем IP и время в лог-файл, если его там еще нет
                         if ! grep -q "^$IP$" "$LOG_FILE"; then
-                            echo "$IP" >> "$LOG_FILE"
+                            echo "$(date '+%Y-%m-%d %H:%M:%S') - $IP" >> "$LOG_FILE"
                         fi
                     else
                         exit 1
@@ -78,9 +78,9 @@ EOF
                 else
                     sed -i "/^$IP:/d" "$FILE"
                     echo "$IP:$RULE_ID" >> "$FILE"
-                    # Добавляем IP в лог-файл, если его там еще нет
+                    # Добавляем IP и время в лог-файл, если его там еще нет
                     if ! grep -q "^$IP$" "$LOG_FILE"; then
-                        echo "$IP" >> "$LOG_FILE"
+                        echo "$(date '+%Y-%m-%d %H:%M:%S') - $IP" >> "$LOG_FILE"
                     fi
                 fi
             else
