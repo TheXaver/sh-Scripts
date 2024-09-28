@@ -31,10 +31,10 @@ EOF
     if [ "$SUCCESS" == "true" ]; then
         RULE_ID=$(echo "$RESPONSE" | jq -r '.result.id')
         sed -i "/^$IP:/d" "$FILE"
-        echo "$IP:$RULE_ID" >> "$FILE"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') - $IP" >> "$LOG_FILE"
         # Добавляем IP в лог-файл, если его там еще нет
         if ! grep -q "^$IP$" "$LOG_FILE"; then
-            echo "$IP" >> "$LOG_FILE"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') - $IP" >> "$LOG_FILE"
         fi
     else
         ERROR_CODE=$(echo "$RESPONSE" | jq -r '.errors[0].code')
